@@ -1,3 +1,5 @@
+import keyboard
+
 # Define all Lists
 class Graphics:
 
@@ -25,8 +27,8 @@ class Graphics:
             currentLine = list(gameVisuals[line])
             currentLine.pop(0)
             currentLine.pop(1)
-            currentLine.insert(0,">")
-            currentLine.insert(1," ")
+            currentLine.insert(0, ">")
+            currentLine.insert(1, " ")
             gameVisuals[line] = currentLine
         return gameVisuals
 
@@ -54,14 +56,18 @@ class Graphics:
 
 
 class Physiscs:
+    #add shapes in positions, multiple sizes
     def AddShapes(shape, size, CoordX, CoordY):
         CoordX = CoordX*3
-        CoordY = CoordY -1
+        CoordY = CoordY - 1
         gameVisuals = Graphics.CreateLists()
 
         def AddFloor():
-            for item in range(20):
-                currentLine = list(gameVisuals[-1])
+            currentLine = ["> "]
+            for item in range(20*3):
+                currentLine.append("_")
+            gameVisuals[CoordY] = currentLine
+            return gameVisuals
 
         def AddSquare():
             def SizeOne():
@@ -136,16 +142,19 @@ class Physiscs:
                 AddSquare()
             case "Circle":
                 AddCircle()
+            case "Floor":
+                AddFloor()
 
         return gameVisuals
 
     def gravity():
         pass
 
-
 class Game:
+    keyboard.press_and_release('R')
     gameVisuals = Graphics.CreateLists()
-    gameVisuals = Physiscs.AddShapes("Square", 6, 1, 1)
+    gameVisuals = Physiscs.AddShapes("Circle", 2, 10, 10)
     Graphics.RunGame(gameVisuals, "Default")
+
 
 Game()
