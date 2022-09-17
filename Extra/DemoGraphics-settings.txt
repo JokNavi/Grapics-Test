@@ -5,10 +5,16 @@ Border style:
 Shapes:
     AddShapes(shape, size, CoordX, CoordY)
         Physiscs.AddShapes("Square", 1, 10, 10)
-        Physiscs.AddShapes("Circle", 1, 10, 10)
+        Physiscs.AddShapes("Square", 2, 10, 10)
+        Physiscs.AddShapes("Square", 3, 10, 10)
+        Physiscs.AddShapes("Square", 4, 10, 10)
 
-Shapes comment (size 2)
+        Physiscs.AddShapes("Circle", 1, 10, 10)
+        Physiscs.AddShapes("Circle", 2, 10, 10)
+
+
+Shapes comment (circle size 2)
 ...---...
-.-    -.
+--     --
 ...---...
         
