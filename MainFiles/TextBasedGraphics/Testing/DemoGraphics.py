@@ -10,14 +10,14 @@ class Graphics:
             return currentLine
 
         # Makes the input lists into one list
-        def ConcatenateFullList():
+        def DefaultFullList():
             gameVisuals = []
             currentLine = CreateCurrentLine()
             for line in range(20):
                 gameVisuals.append(currentLine)
             return gameVisuals
 
-        gameVisuals = ConcatenateFullList()
+        gameVisuals = DefaultFullList()
         return gameVisuals
 
     def RunGame(gameVisuals, printWhat):
@@ -38,11 +38,18 @@ class Graphics:
             PrintNumberedLines()
         elif(printWhat == "Default"):
             PrintLines()
-        else: print("Error, non existent game type!")
+        else:
+            print("Error, non existent game type!")
+            
 
-
-    gameVisuals = CreateLists()
-    RunGame(gameVisuals, "Default")
-
+class AddShapes:
+    def AddSquare():
+        pass
+class physiscs:
+    def gravity():
+        pass
+class Game:
+    gameVisuals = Graphics.CreateLists()
+    Graphics.RunGame(gameVisuals, "Default")
 
 Graphics()
