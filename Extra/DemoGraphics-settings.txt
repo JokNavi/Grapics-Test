@@ -1,0 +1,14 @@
+Border style:
+    Graphics.RunGame(gameVisuals, "Numbered")
+    Graphics.RunGame(gameVisuals, "Default")
+
+Shapes:
+    AddShapes(shape, size, CoordX, CoordY)
+        Physiscs.AddShapes("Square", 1, 10, 10)
+        Physiscs.AddShapes("Circle", 1, 10, 10)
+
+Shapes comment (size 2)
+...---...
+.-    -.
+...---...
+        
