@@ -1,7 +1,4 @@
 # Define all Lists
-from difflib import Match
-
-
 class Graphics:
 
     # Creates the single lines lists
@@ -21,6 +18,16 @@ class Graphics:
             return gameVisuals
 
         gameVisuals = DefaultFullList()
+        return gameVisuals
+
+    def OverWriteBorders(gameVisuals):
+        for line in range(len(gameVisuals)):
+            currentLine = list(gameVisuals[line])
+            currentLine.pop(0)
+            currentLine.pop(1)
+            currentLine.insert(0,">")
+            currentLine.insert(1," ")
+            gameVisuals[line] = currentLine
         return gameVisuals
 
     def RunGame(gameVisuals, printWhat):
@@ -49,8 +56,12 @@ class Graphics:
 class Physiscs:
     def AddShapes(shape, size, CoordX, CoordY):
         CoordX = CoordX*3
-        CoordY = CoordY
+        CoordY = CoordY -1
         gameVisuals = Graphics.CreateLists()
+
+        def AddFloor():
+            for item in range(20):
+                currentLine = list(gameVisuals[-1])
 
         def AddSquare():
             def SizeOne():
@@ -61,30 +72,57 @@ class Physiscs:
                 return gameVisuals
 
             def SizeTwo():
-                #Top Line
+                halfSize = int(size / 2)
+                currentY = list(gameVisuals[CoordY-halfSize])
+                currentX = CoordX - halfSize
+                for counter in range(size):
+                    for item in range((size*2)+halfSize):
+                        currentY.pop(currentX + item)
+                        currentY.insert(currentX + item, "=")
+                    gameVisuals[CoordY+counter] = currentY
+                    currentY = list(gameVisuals[CoordY-halfSize+counter])
+
+                finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
+                return finalGameVisuals
+
+            if(size == 1):
+                SizeOne()
+            elif size > 1:
+                SizeTwo()
+
+        def AddCircle():
+            def SizeOne():
+                currentY = list(gameVisuals[CoordY])
+                currentY.pop(CoordX)
+                currentY.insert(CoordX, "*")
+                gameVisuals[CoordY] = currentY
+                return gameVisuals
+
+            def SizeTwo():
+                # Top Line
                 currentY = list(gameVisuals[CoordY+1])
                 currentX = CoordX - 1
                 for item in range(3):
                     currentY.pop(currentX + item)
                     currentY.insert(currentX + item, "=")
                 gameVisuals[CoordY+1] = currentY
-                
-                #Center Line
+
+                # Center Line
                 currentY = list(gameVisuals[CoordY])
-                currentX = CoordX -3
+                currentX = CoordX - 3
                 for item in range(7):
                     currentY.pop(currentX + item)
                     currentY.insert(currentX + item, "=")
                 gameVisuals[CoordY] = currentY
 
-                #Bottom Line
+                # Bottom Line
                 currentY = list(gameVisuals[CoordY-1])
                 currentX = CoordX - 1
                 for item in range(3):
                     currentY.pop(currentX + item)
                     currentY.insert(currentX + item, "=")
                 gameVisuals[CoordY-1] = currentY
-                
+
                 return gameVisuals
 
             match size:
@@ -92,11 +130,13 @@ class Physiscs:
                     SizeOne()
                 case 2:
                     SizeTwo()
-                    
+
         match shape:
             case "Square":
                 AddSquare()
-        
+            case "Circle":
+                AddCircle()
+
         return gameVisuals
 
     def gravity():
@@ -105,8 +145,7 @@ class Physiscs:
 
 class Game:
     gameVisuals = Graphics.CreateLists()
-    gameVisuals = Physiscs.AddShapes("Square", 2, 10, 10)
+    gameVisuals = Physiscs.AddShapes("Square", 6, 1, 1)
     Graphics.RunGame(gameVisuals, "Default")
 
-
-Graphics()
+Game()
