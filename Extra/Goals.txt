@@ -1,0 +1,4 @@
+1. Discover different types of grapics.
+Text based, image based, PyGame, ect
+2. Learn about all grapic types.
+3. make a gravity system in console.
