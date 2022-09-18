@@ -1,10 +1,12 @@
 import keyboard
+import time
+
 
 # Define all Lists
 class Graphics:
 
     # Creates the single lines lists
-    def CreateLists():
+    def CreateDefaultList():
         def CreateCurrentLine():
             currentLine = ["> "]
             for item in range(20*3):
@@ -35,9 +37,8 @@ class Graphics:
     def RunGame(gameVisuals, printWhat):
         # print the full list in seperate lines
         def PrintLines():
-            for lineNumber in range(20):
-                line = gameVisuals[lineNumber]
-                print(*line, sep="")
+            for line in range(20):
+                print(*gameVisuals[line], sep='')
 
         # print the full list in seperate numbered lines
         def PrintNumberedLines():
@@ -56,11 +57,11 @@ class Graphics:
 
 
 class Physiscs:
-    #add shapes in positions, multiple sizes
+    # add shapes in positions, multiple sizes
     def AddShapes(shape, size, CoordX, CoordY):
         CoordX = CoordX*3
         CoordY = CoordY - 1
-        gameVisuals = Graphics.CreateLists()
+        gameVisuals = Graphics.CreateDefaultList()
 
         def AddFloor():
             currentLine = ["> "]
@@ -150,11 +151,22 @@ class Physiscs:
     def gravity():
         pass
 
+
 class Game:
-    keyboard.press_and_release('R')
-    gameVisuals = Graphics.CreateLists()
+    def ResetGraphics():
+        gameVisuals = Graphics.CreateDefaultList()
+    def gameLoop(gameVisuals):
+        while True:
+            Graphics.RunGame(gameVisuals, "Default")
+            time.sleep(0.5)
+            if keyboard.is_pressed("esc"):
+                break
+
+    gameVisuals = Graphics.CreateDefaultList()
     gameVisuals = Physiscs.AddShapes("Circle", 2, 10, 10)
-    Graphics.RunGame(gameVisuals, "Default")
+    # gameLoop(gameVisuals)
+
+    Graphics.RunGame(gameVisuals, "Numbered")
 
 
 Game()
