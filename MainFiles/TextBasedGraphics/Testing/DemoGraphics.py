@@ -1,3 +1,4 @@
+from ast import Delete
 import keyboard
 import time
 
@@ -27,10 +28,8 @@ class Graphics:
     def OverWriteBorders(gameVisuals):
         for line in range(len(gameVisuals)):
             currentLine = list(gameVisuals[line])
-            currentLine.pop(0)
-            currentLine.pop(1)
-            currentLine.insert(0, ">")
-            currentLine.insert(1, " ")
+            currentLine = currentLine[2:]
+            currentLine.insert(0, "> ")
             gameVisuals[line] = currentLine
         return gameVisuals
 
@@ -57,38 +56,34 @@ class Graphics:
 
 
 class Physiscs:
+
     # add shapes in positions, multiple sizes
-    def AddShapes(shape, size, CoordX, CoordY):
-        CoordX = CoordX*3
-        CoordY = CoordY - 1
+    def AddShapes(shape, size, coordX, coordY):
+        coordX = coordX*3
+        coordY = coordY - 1
         gameVisuals = Graphics.CreateDefaultList()
 
         def AddFloor():
             currentLine = ["> "]
             for item in range(20*3):
                 currentLine.append("_")
-            gameVisuals[CoordY] = currentLine
+            gameVisuals[coordY] = currentLine
             return gameVisuals
 
         def AddSquare():
             def SizeOne():
-                currentY = list(gameVisuals[CoordY])
-                currentY.pop(CoordX)
-                currentY.insert(CoordX, "*")
-                gameVisuals[CoordY] = currentY
+                line = list(gameVisuals[coordY])
+                line.pop(coordX)
+                line.insert(coordX, "#")
+                gameVisuals[coordY] = line
                 return gameVisuals
 
             def SizeTwo():
-                halfSize = int(size / 2)
-                currentY = list(gameVisuals[CoordY-halfSize])
-                currentX = CoordX - halfSize
                 for counter in range(size):
-                    for item in range((size*2)+halfSize):
-                        currentY.pop(currentX + item)
-                        currentY.insert(currentX + item, "=")
-                    gameVisuals[CoordY+counter] = currentY
-                    currentY = list(gameVisuals[CoordY-halfSize+counter])
-
+                    line = list(gameVisuals[coordY+int(size/2)+counter])
+                    for counterTwo in range(size*3):
+                        line[coordX - int(size/2)+counterTwo] = "#"
+                    gameVisuals[coordY+int(size/2)+counter] = line
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
@@ -99,38 +94,18 @@ class Physiscs:
 
         def AddCircle():
             def SizeOne():
-                currentY = list(gameVisuals[CoordY])
-                currentY.pop(CoordX)
-                currentY.insert(CoordX, "*")
-                gameVisuals[CoordY] = currentY
+                line = list(gameVisuals[coordY])
+                line.pop(coordX)
+                line.insert(coordX, "*")
+                gameVisuals[coordY] = line
                 return gameVisuals
 
             def SizeTwo():
-                # Top Line
-                currentY = list(gameVisuals[CoordY+1])
-                currentX = CoordX - 1
-                for item in range(3):
-                    currentY.pop(currentX + item)
-                    currentY.insert(currentX + item, "=")
-                gameVisuals[CoordY+1] = currentY
-
-                # Center Line
-                currentY = list(gameVisuals[CoordY])
-                currentX = CoordX - 3
-                for item in range(7):
-                    currentY.pop(currentX + item)
-                    currentY.insert(currentX + item, "=")
-                gameVisuals[CoordY] = currentY
-
-                # Bottom Line
-                currentY = list(gameVisuals[CoordY-1])
-                currentX = CoordX - 1
-                for item in range(3):
-                    currentY.pop(currentX + item)
-                    currentY.insert(currentX + item, "=")
-                gameVisuals[CoordY-1] = currentY
-
-                return gameVisuals
+                for lineCounter in size:
+                    line = list(gameVisuals[coordY+(size-3)+1])
+                
+                finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
+                return finalGameVisuals
 
             match size:
                 case 1:
@@ -155,18 +130,24 @@ class Physiscs:
 class Game:
     def ResetGraphics():
         gameVisuals = Graphics.CreateDefaultList()
+        return gameVisuals
+
     def gameLoop(gameVisuals):
         while True:
             Graphics.RunGame(gameVisuals, "Default")
             time.sleep(0.5)
             if keyboard.is_pressed("esc"):
                 break
+            elif keyboard.is_pressed("r"):
+                gameVisuals = Game.ResetGraphics()
+            elif keyboard.is_pressed("p"):
+                shapeInput = input()
 
     gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes("Circle", 2, 10, 10)
+    gameVisuals = Physiscs.AddShapes("Square", 4, 5, 5)
     # gameLoop(gameVisuals)
 
-    Graphics.RunGame(gameVisuals, "Numbered")
+    Graphics.RunGame(gameVisuals, "Default")
 
 
 Game()
