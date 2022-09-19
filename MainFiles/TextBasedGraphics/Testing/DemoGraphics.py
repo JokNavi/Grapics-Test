@@ -1,6 +1,6 @@
-from ast import Delete
 import keyboard
 import time
+import math
 
 
 # Define all Lists
@@ -17,9 +17,8 @@ class Graphics:
         # Makes the input lists into one list
         def DefaultFullList():
             gameVisuals = []
-            currentLine = CreateCurrentLine()
             for line in range(20):
-                gameVisuals.append(currentLine)
+                gameVisuals.append(CreateCurrentLine())
             return gameVisuals
 
         gameVisuals = DefaultFullList()
@@ -58,10 +57,9 @@ class Graphics:
 class Physiscs:
 
     # add shapes in positions, multiple sizes
-    def AddShapes(shape, size, coordX, coordY):
-        coordX = coordX*3
-        coordY = coordY - 1
-        gameVisuals = Graphics.CreateDefaultList()
+    def AddShapes(gameVisuals, shape, size, coordX, coordY):
+        coordX = (coordX*3)-1
+        coordY = coordY-1
 
         def AddFloor():
             currentLine = ["> "]
@@ -80,10 +78,10 @@ class Physiscs:
 
             def SizeTwo():
                 for counter in range(size):
-                    line = list(gameVisuals[coordY+int(size/2)+counter])
+                    line = list(gameVisuals[coordY+math.floor(size/2)+counter])
                     for counterTwo in range(size*3):
-                        line[coordX - int(size/2)+counterTwo] = "#"
-                    gameVisuals[coordY+int(size/2)+counter] = line
+                        line[coordX - math.floor(size/2)+counterTwo-1] = "#"
+                    gameVisuals[coordY + math.floor(size/2)+counter] = line
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
@@ -101,17 +99,29 @@ class Physiscs:
                 return gameVisuals
 
             def SizeTwo():
-                for lineCounter in size:
-                    line = list(gameVisuals[coordY+(size-3)+1])
-                
+
+                line = gameVisuals[coordY+1]
+                for slotCounter in range((size)):
+                    line[((coordX-math.floor(size/2)+1))+slotCounter] = "#"
+                gameVisuals[coordY+1] = line
+
+                line = gameVisuals[coordY]
+                for slotCounter in range((size)+2):
+                    line[(coordX-math.floor(size/2))+slotCounter] = "#"
+                gameVisuals[coordY] = line
+
+                line = gameVisuals[coordY-1]
+                for slotCounter in range((size)):
+                    line[((coordX-math.floor(size/2)+1))+slotCounter] = "#"
+                gameVisuals[coordY-1] = line
+                    
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
-            match size:
-                case 1:
-                    SizeOne()
-                case 2:
-                    SizeTwo()
+            if(size == 1):
+                SizeOne()
+            elif size > 1:
+                SizeTwo()
 
         match shape:
             case "Square":
@@ -144,7 +154,8 @@ class Game:
                 shapeInput = input()
 
     gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes("Square", 4, 5, 5)
+    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 3, 10, 10)
+    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 1, 10, 10)
     # gameLoop(gameVisuals)
 
     Graphics.RunGame(gameVisuals, "Default")
