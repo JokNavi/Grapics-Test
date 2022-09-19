@@ -58,8 +58,8 @@ class Physiscs:
 
     # add shapes in positions, multiple sizes
     def AddShapes(gameVisuals, shape, size, coordX, coordY):
-        coordX = (coordX*3)-1
-        coordY = coordY-1
+        coordX = (coordX*3)+1
+        coordY = coordY+1
 
         def AddFloor():
             currentLine = ["> "]
@@ -72,23 +72,34 @@ class Physiscs:
             def SizeOne():
                 line = list(gameVisuals[coordY])
                 line.pop(coordX)
-                line.insert(coordX, "#")
+                line.insert(coordX, "*")
                 gameVisuals[coordY] = line
                 return gameVisuals
 
             def SizeTwo():
-                for counter in range(size):
-                    line = list(gameVisuals[coordY+math.floor(size/2)+counter])
-                    for counterTwo in range(size*3):
-                        line[coordX - math.floor(size/2)+counterTwo-1] = "#"
-                    gameVisuals[coordY + math.floor(size/2)+counter] = line
+                for counter in range(2):
+                    line = list(gameVisuals[(coordY - 1)+counter])
+                    for counterTwo in range(size):
+                        line[(coordX - 1) + counterTwo] = "#"
+                    gameVisuals[(coordY - 1)+counter] = line
+                finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
+                return finalGameVisuals
+
+            def SizeThree():
+                for counter in range(math.floor(size/3)*2):
+                    line = list(gameVisuals[coordY-math.floor(size/3)+counter])
+                    for counterTwo in range(size):
+                        line[coordX - math.floor(size/2)+counterTwo+1] = "#"
+                    gameVisuals[coordY-math.floor(size/3)+counter] = line
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
             if(size == 1):
                 SizeOne()
-            elif size > 1:
+            elif(size == 2):
                 SizeTwo()
+            elif size > 2:
+                SizeThree()
 
         def AddCircle():
             def SizeOne():
@@ -154,9 +165,7 @@ class Game:
                 shapeInput = input()
 
     gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 3, 10, 10)
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 1, 10, 10)
-    # gameLoop(gameVisuals)
+    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 2, 3, 3)
 
     Graphics.RunGame(gameVisuals, "Default")
 

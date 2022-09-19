@@ -22,4 +22,26 @@ Shapes comment (circle size 3)
 ....1234....
 ...123456...
 ....1234....
-        
+
+Shapes comment (Square size 3)
+.123.
+.123.
+
+Shapes comment (Square size 4)
+.1234.
+.1234.
+
+Shapes comment (Square size 5)
+.12345.
+.12345.
+
+Shapes comment (Square size 6)
+.123456.
+.123456.
+.123456.
+
+Shapes comment (Square size TEST)
+.123456789112.
+.123456789112.
+.123456789112.
+.123456789112.
