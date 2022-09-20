@@ -165,7 +165,9 @@ class Game:
                 shapeInput = input()
 
     gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 2, 3, 3)
+    gameVisuals = Physiscs.AddShapes(gameVisuals, "Circle", 3, 3, 3)
+    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 3, 5, 5)
+    
 
     Graphics.RunGame(gameVisuals, "Default")
 
