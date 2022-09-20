@@ -46,9 +46,9 @@ class Graphics:
                     '>', f"{str(lineNumber)}>"), line))
                 print(*line, sep="")
 
-        if(printWhat == "Numbered"):
+        if (printWhat == "Numbered"):
             PrintNumberedLines()
-        elif(printWhat == "Default"):
+        elif (printWhat == "Default"):
             PrintLines()
         else:
             print("Error, non existent game type!")
@@ -94,9 +94,9 @@ class Physiscs:
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
-            if(size == 1):
+            if (size == 1):
                 SizeOne()
-            elif(size == 2):
+            elif (size == 2):
                 SizeTwo()
             elif size > 2:
                 SizeThree()
@@ -125,11 +125,11 @@ class Physiscs:
                 for slotCounter in range((size)):
                     line[((coordX-math.floor(size/2)+1))+slotCounter] = "#"
                 gameVisuals[coordY-1] = line
-                    
+
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
-            if(size == 1):
+            if (size == 1):
                 SizeOne()
             elif size > 1:
                 SizeTwo()
@@ -148,28 +148,28 @@ class Physiscs:
         pass
 
 
+doLoop = True
+
+
 class Game:
+
     def ResetGraphics():
         gameVisuals = Graphics.CreateDefaultList()
         return gameVisuals
 
-    def gameLoop(gameVisuals):
-        while True:
+    def GameLoop(gameVisuals):
+        def Loop():
+            global doLoop
+            doLoop = False
+            print("Stopped program!")
+
+        keyboard.add_hotkey('esc', Loop)
+        while doLoop:
             Graphics.RunGame(gameVisuals, "Default")
             time.sleep(0.5)
-            if keyboard.is_pressed("esc"):
-                break
-            elif keyboard.is_pressed("r"):
-                gameVisuals = Game.ResetGraphics()
-            elif keyboard.is_pressed("p"):
-                shapeInput = input()
 
-    gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Circle", 3, 3, 3)
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 3, 5, 5)
-    
-
-    Graphics.RunGame(gameVisuals, "Default")
+    gameVisuals = ResetGraphics()
+    GameLoop(gameVisuals)
 
 
 Game()
