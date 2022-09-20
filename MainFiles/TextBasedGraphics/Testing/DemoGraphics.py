@@ -1,4 +1,4 @@
-from ast import arg
+from turtle import addshape
 import keyboard
 import time
 import math
@@ -47,9 +47,9 @@ class Graphics:
                     '>', f"{str(lineNumber)}>"), line))
                 print(*line, sep="")
 
-        if(printWhat == "Numbered"):
+        if (printWhat == "Numbered"):
             PrintNumberedLines()
-        elif(printWhat == "Default"):
+        elif (printWhat == "Default"):
             PrintLines()
         else:
             print("Error, non existent game type!")
@@ -59,20 +59,22 @@ class Physiscs:
 
     # add shapes in positions, multiple sizes
     def AddShapes(gameVisuals, shape, size, coordX, coordY):
-        coordX = (coordX*3)+1
-        coordY = coordY+1
+        coordX = coordX+1
+        coordY = coordY-1
+        halfSize = math.floor(size/2)
 
-        def AddFloor():
-            currentLine = ["> "]
-            for item in range(20*3):
-                currentLine.append("_")
+        def AddLine():
+            currentLine = gameVisuals[coordY]
+            for CurrentCoordX in range((size)):
+                currentLine[(coordX - halfSize)+1+CurrentCoordX] = "-"
             gameVisuals[coordY] = currentLine
-            return gameVisuals
+            finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
+            return finalGameVisuals
 
         def AddSquare():
             def SizeOne():
                 line = list(gameVisuals[coordY])
-                line.pop(coordX)
+                line.pop(coordX+2)
                 line.insert(coordX, "*")
                 gameVisuals[coordY] = line
                 return gameVisuals
@@ -81,7 +83,7 @@ class Physiscs:
                 for counter in range(2):
                     line = list(gameVisuals[(coordY - 1)+counter])
                     for counterTwo in range(size):
-                        line[(coordX - 1) + counterTwo] = "#"
+                        line[((coordX - 1) + counterTwo)] = "#"
                     gameVisuals[(coordY - 1)+counter] = line
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
@@ -90,14 +92,14 @@ class Physiscs:
                 for counter in range(math.floor(size/3)*2):
                     line = list(gameVisuals[coordY-math.floor(size/3)+counter])
                     for counterTwo in range(size):
-                        line[coordX - math.floor(size/2)+counterTwo+1] = "#"
+                        line[(coordX - math.floor(size/2)+counterTwo+1)] = "#"
                     gameVisuals[coordY-math.floor(size/3)+counter] = line
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
-            if(size == 1):
+            if (size == 1):
                 SizeOne()
-            elif(size == 2):
+            elif (size == 2):
                 SizeTwo()
             elif size > 2:
                 SizeThree()
@@ -114,23 +116,23 @@ class Physiscs:
 
                 line = gameVisuals[coordY+1]
                 for slotCounter in range((size)):
-                    line[((coordX-math.floor(size/2)+1))+slotCounter] = "#"
+                    line[((coordX-halfSize+1))+slotCounter+2] = "#"
                 gameVisuals[coordY+1] = line
 
                 line = gameVisuals[coordY]
                 for slotCounter in range((size)+2):
-                    line[(coordX-math.floor(size/2))+slotCounter] = "#"
+                    line[(coordX-halfSize)+slotCounter+2] = "#"
                 gameVisuals[coordY] = line
 
                 line = gameVisuals[coordY-1]
                 for slotCounter in range((size)):
-                    line[((coordX-math.floor(size/2)+1))+slotCounter] = "#"
+                    line[((coordX-halfSize+1))+slotCounter+2] = "#"
                 gameVisuals[coordY-1] = line
-                    
+
                 finalGameVisuals = Graphics.OverWriteBorders(gameVisuals)
                 return finalGameVisuals
 
-            if(size == 1):
+            if (size == 1):
                 SizeOne()
             elif size > 1:
                 SizeTwo()
@@ -140,8 +142,8 @@ class Physiscs:
                 AddSquare()
             case "Circle":
                 AddCircle()
-            case "Floor":
-                AddFloor()
+            case "Line":
+                AddLine()
 
         return gameVisuals
 
@@ -149,26 +151,42 @@ class Physiscs:
         pass
 
 
+
+doLoop = True  
 class Game:
+
     def ResetGraphics():
         gameVisuals = Graphics.CreateDefaultList()
         return gameVisuals
 
-    def gameLoop(gameVisuals):
-        doLoop = True
-        keyboard.add_hotkey('esc', exit(0))
-        keyboard.add_hotkey('r', lambda: Game.ResetGraphics())
-        
+    def GameLoop(gameVisuals, borderType):
+        def Loop():
+            global doLoop
+            doLoop = False
+            
+        keyboard.add_hotkey('esc', Loop)
         while doLoop:
-            Graphics.RunGame(gameVisuals, "Default")
-            time.sleep(0.5)
+            Graphics.RunGame(gameVisuals, borderType)
+            time.sleep(0.7)
+        print("Stopped program!")
 
-    gameVisuals = ResetGraphics()
-    gameLoop(gameVisuals)
+    def Start(startUp, borderType):
+        gameVisuals = Game.ResetGraphics()
+        #TYPE SHAPES FROM HERE
+        #Physiscs.AddShapes(gameVisuals, "Shape", Size, X, Y)
+        Physiscs.AddShapes(gameVisuals, "Square", 5, 54, 10)
+        Physiscs.AddShapes(gameVisuals, "Circle", 1, 25, 15)
+        Physiscs.AddShapes(gameVisuals, "Line", 20, 25, 20)
 
-    #gameVisuals = Graphics.CreateDefaultList()
-    #gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 2, 3, 3)
-    #Graphics.RunGame(gameVisuals, "Default")
+        #TO HERE
+        if startUp == "Single":
+             Graphics.RunGame(gameVisuals, borderType)
+        elif startUp == "Loop":
+            gameVisuals = Game.ResetGraphics()
+            Game.GameLoop(gameVisuals, borderType)
 
+#Game.Start("RunTypes", "BorderTypes")
+Game.Start("Single", "Default")
 
-Game()
+#RunTypes = Single/Loop
+#BorderTypes = Default/Numbered
