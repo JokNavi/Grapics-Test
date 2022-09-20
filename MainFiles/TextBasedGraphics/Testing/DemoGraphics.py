@@ -161,7 +161,10 @@ class Game:
     def GameLoop(gameVisuals, borderType):
         while True:
             Graphics.RunGame(gameVisuals, borderType)
-            time.sleep(0.7)
+            for _ in range(7):
+                time.sleep(0.1)
+                if keyboard.is_pressed("esc"):
+                    return
 
     def Start(startUp, borderType):
         gameVisuals = Game.ResetGraphics()
@@ -185,6 +188,7 @@ class Game:
 
 #Game.Start("RunTypes", "BorderTypes")
 Game.Start("Loop", "Default")
+print("EndOfProgram")
 
 #RunTypes = Single/Loop
 #BorderTypes = Default/Numbered
