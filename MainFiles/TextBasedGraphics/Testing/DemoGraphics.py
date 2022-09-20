@@ -1,7 +1,7 @@
-from turtle import addshape
 import keyboard
 import time
 import math
+import sys
 
 
 # Define all Lists
@@ -152,7 +152,6 @@ class Physiscs:
 
 
 
-doLoop = True  
 class Game:
 
     def ResetGraphics():
@@ -160,23 +159,22 @@ class Game:
         return gameVisuals
 
     def GameLoop(gameVisuals, borderType):
-        def Loop():
-            global doLoop
-            doLoop = False
-            
-        keyboard.add_hotkey('esc', Loop)
-        while doLoop:
+        while True:
             Graphics.RunGame(gameVisuals, borderType)
             time.sleep(0.7)
-        print("Stopped program!")
 
     def Start(startUp, borderType):
         gameVisuals = Game.ResetGraphics()
         #TYPE SHAPES FROM HERE
         #Physiscs.AddShapes(gameVisuals, "Shape", Size, X, Y)
+
+
+
         Physiscs.AddShapes(gameVisuals, "Square", 5, 54, 10)
         Physiscs.AddShapes(gameVisuals, "Circle", 1, 25, 15)
         Physiscs.AddShapes(gameVisuals, "Line", 20, 25, 20)
+
+
 
         #TO HERE
         if startUp == "Single":
@@ -186,7 +184,7 @@ class Game:
             Game.GameLoop(gameVisuals, borderType)
 
 #Game.Start("RunTypes", "BorderTypes")
-Game.Start("Single", "Default")
+Game.Start("Loop", "Default")
 
 #RunTypes = Single/Loop
 #BorderTypes = Default/Numbered
