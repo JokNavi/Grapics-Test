@@ -1,4 +1,13 @@
 1. Discover different types of grapics.
 Text based, image based, PyGame, ect
 2. Learn about all grapic types.
-3. make a gravity system in console.
+3. Copy MainGraphics.py and add physics
+4. make a gravity system in console.
+
+
+#MainGraphics.py
+    Use __init__ when possible
+    refer data trough class if possible
+    optimise data requests
+    encourage speed/fps
+    Be chill

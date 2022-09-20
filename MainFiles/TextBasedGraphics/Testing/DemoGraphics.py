@@ -1,7 +1,6 @@
 import keyboard
 import time
 import math
-import sys
 
 
 # Define all Lists
