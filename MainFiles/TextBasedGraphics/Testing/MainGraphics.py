@@ -52,7 +52,6 @@ class GameHandler:
     def GameLoop(GRAPHICS, gameVisuals):
         GRAPHICS.RunGame(gameVisuals)
         while True:
-            for _ in range(5*2):
                 time.sleep(0.05)
                 if keyboard.is_pressed("esc"):
                     return
