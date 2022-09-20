@@ -1,3 +1,4 @@
+from ast import arg
 import keyboard
 import time
 import math
@@ -154,20 +155,20 @@ class Game:
         return gameVisuals
 
     def gameLoop(gameVisuals):
-        while True:
+        doLoop = True
+        keyboard.add_hotkey('esc', exit(0))
+        keyboard.add_hotkey('r', lambda: Game.ResetGraphics())
+        
+        while doLoop:
             Graphics.RunGame(gameVisuals, "Default")
             time.sleep(0.5)
-            if keyboard.is_pressed("esc"):
-                break
-            elif keyboard.is_pressed("r"):
-                gameVisuals = Game.ResetGraphics()
-            elif keyboard.is_pressed("p"):
-                shapeInput = input()
 
-    gameVisuals = Graphics.CreateDefaultList()
-    gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 2, 3, 3)
+    gameVisuals = ResetGraphics()
+    gameLoop(gameVisuals)
 
-    Graphics.RunGame(gameVisuals, "Default")
+    #gameVisuals = Graphics.CreateDefaultList()
+    #gameVisuals = Physiscs.AddShapes(gameVisuals, "Square", 2, 3, 3)
+    #Graphics.RunGame(gameVisuals, "Default")
 
 
 Game()
