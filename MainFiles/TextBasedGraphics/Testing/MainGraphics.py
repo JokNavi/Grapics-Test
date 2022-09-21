@@ -63,7 +63,5 @@ class GameHandler:
     screenSize, prefix, spacing, border = InputHandler()
     GRAPHICS = Graphics(screenSize, prefix, spacing, border)
     gameVisuals = GRAPHICS.CreateDefaultFrame()
-    GRAPHICS.RunGame(gameVisuals)
-
     GameLoop(GRAPHICS, gameVisuals)
     
