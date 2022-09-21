@@ -3,7 +3,7 @@ import copy
 import keyboard
 
 errorMesage = ""
-
+devMode = True
 
 class Graphics:
     def __init__(self, screenSize, prefix, spacing, border):
@@ -13,18 +13,28 @@ class Graphics:
         self.SPACING = spacing
         self.BORDER = border
 
-    def CreateDefaultFrame(self):
+    def CreateDefaultFrame(self, BORDERMODE):
         # Creates a single line as a list, takes self.prefix and self.spacing as input
-        def CreateALine():
+        def CreateALine(TOKEN):
             line = [self.SPACING for _ in range(self.XSCREENSIZE)]
-            line.insert(0, "->")
+            line.insert(0, TOKEN)
             line.append(self.BORDER)
             return line
 
         # Create gameVisual list and add a border, no matter if it's empty or not
+        numberdBorder = [counter+1 for counter in range(self.YSCREENSIZE)]
+        numberdBorder = ["0" + str(numberdBorder[counter]) if numberdBorder[counter] < 10 else str(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
+        
         borderLine = [self.BORDER for _ in range(
             self.XSCREENSIZE+len(self.PREFIX)+1)]
-        gameVisuals = [CreateALine() for _ in range(self.YSCREENSIZE)]
+        if BORDERMODE == "Numbered":
+            gameVisuals = [CreateALine(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
+        elif BORDERMODE == "Default":
+            gameVisuals = [CreateALine("->") for _ in range(self.YSCREENSIZE)]
+        else: 
+            global errorMesage
+            errorMesage = "Error. That border mode doesn't exist yet. :)"
+            
         gameVisuals.insert(0, borderLine)
         gameVisuals.append(borderLine)
         return gameVisuals
@@ -44,12 +54,14 @@ class AddVisuals:
         self.XSCREENSIZE = SCREENSIZE*3
 
     def ShapeInputHandler(self, SCREENSIZE):
-        print("#ADD-SHAPE-MENU! \n")
+        print("\n#ADD-SHAPE-MENU!\n")
         print("- Shapes can be: Dot, Line")
         print(f"- Size can be: 1 to {SCREENSIZE}")
         print(f"- X Coords can be: 1 to {SCREENSIZE*3}\n")
-        print("Input your desired shape and size down below.")
-        return
+        print("Input your desired shape, size, X and Y down below.")
+        print("Use this format: Shape, Size, X, Y")
+        SHAPE, SIZE, X, Y = input(">: ").split(",")
+        return SHAPE, SIZE, X, Y
 
     def CheckBorder(self, GAMEVISUALS, LINE, slotValue):
         hits = ["Hit" for _ in range(1) if LINE.index(slotValue) == 0 or LINE.index(
@@ -66,19 +78,24 @@ class AddVisuals:
             return 1
 
     def AddDot(self, gameVisuals, X, Y):
+        OLDGAMEVISUALS = copy.deepcopy(gameVisuals)
         LINE = gameVisuals[Y]
         LINE[X] = "*"
-        gameVisuals[Y] = LINE
-        return gameVisuals
+        if(AddVisuals.CheckBorder(self, gameVisuals, LINE, "*")):
+            global errorMesage
+            errorMesage = "Error. Cannot place shape there as it would overlap with the border."
+            return OLDGAMEVISUALS
+        else:
+            gameVisuals[Y] = LINE
+            return gameVisuals
 
     def AddLine(self, gameVisuals, SIZE, X, Y):
         OLDGAMEVISUALS = copy.deepcopy(gameVisuals)
-        slotValue = "-"
         ISEVEN = AddVisuals.IsEven(self, SIZE)
         HALFSIZE = SIZE//2
         LINE = gameVisuals[Y]
-        LINE[(X-HALFSIZE):(X+HALFSIZE)+ISEVEN] = [slotValue for _ in range(SIZE)]
-        if(AddVisuals.CheckBorder(self, gameVisuals, LINE, slotValue)):
+        LINE[(X-HALFSIZE):(X+HALFSIZE)+ISEVEN] = ["-" for _ in range(SIZE)]
+        if(AddVisuals.CheckBorder(self, gameVisuals, LINE, "-")):
             global errorMesage
             errorMesage = "Error. Cannot place shape there as it would overlap with the border."
             return OLDGAMEVISUALS
@@ -90,12 +107,13 @@ class AddVisuals:
 class GameHandler:
 
     def GraphicsInputHandler(self):
+        borderMode = "Numbered"
         lower = 30
         screenSize = 24
         prefix = "->"
         spacing = " "
         border = "#"
-        return lower, screenSize, prefix, spacing, border
+        return borderMode, lower, screenSize, prefix, spacing, border
 
     def ErrorHandler():
         global errorMesage
@@ -103,6 +121,9 @@ class GameHandler:
         errorMesage = ""
 
     def GameLoop(self, GRAPHICS, gameVisuals, LOWER, SCREENSIZE):
+        if(len(errorMesage) > 0):
+            GameHandler.ErrorHandler()
+            return "Error!"
         ADDVISUALS = AddVisuals(SCREENSIZE)
         GRAPHICS.PlayFrame(gameVisuals)
         while True:
@@ -115,11 +136,25 @@ class GameHandler:
                 GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.02)
             elif keyboard.is_pressed("a"):
-                ADDVISUALS.ShapeInputHandler(SCREENSIZE)
-                gameVisuals = ADDVISUALS.AddLine(gameVisuals, 3, 5, 3)
-                GRAPHICS.LowerFrame(LOWER)
-                GRAPHICS.PlayFrame(gameVisuals)
-                time.sleep(0.02)
+                if devMode:
+                    ADDVISUALS.AddDot(gameVisuals, 10, 5)
+                    GRAPHICS.LowerFrame(LOWER)
+                    GRAPHICS.PlayFrame(gameVisuals)
+                    time.sleep(0.02)
+                else:
+                    shape, size, x, y = ADDVISUALS.ShapeInputHandler(SCREENSIZE)
+
+                    if size == 0:
+                        print("Error. Size can't be 0.")
+                    else:
+                        match shape:
+                            case "Dot":
+                                ADDVISUALS.AddDot(gameVisuals, x, y)
+                            case "Line":
+                                gameVisuals = ADDVISUALS.AddLine(gameVisuals, size, x, y)
+                        GRAPHICS.LowerFrame(LOWER)
+                        GRAPHICS.PlayFrame(gameVisuals)
+                        time.sleep(0.02)
             elif(len(errorMesage) > 0):
                 GameHandler.ErrorHandler()
 
@@ -127,9 +162,9 @@ class GameHandler:
 class InitiateProgram:
 
     GAMEHANDLER = GameHandler()
-    LOWER, SCREENSIZE, PREFIX, SPACING, BORDER = GAMEHANDLER.GraphicsInputHandler()
+    BORDERMODE, LOWER, SCREENSIZE, PREFIX, SPACING, BORDER = GAMEHANDLER.GraphicsInputHandler()
     GRAPHICS = Graphics(SCREENSIZE, PREFIX, SPACING, BORDER)
-    gameVisuals = GRAPHICS.CreateDefaultFrame()
+    gameVisuals = GRAPHICS.CreateDefaultFrame(BORDERMODE)
     GAMEHANDLER.GameLoop(GRAPHICS, gameVisuals, LOWER, SCREENSIZE)
 
 
