@@ -3,7 +3,8 @@ import copy
 import keyboard
 
 errorMesage = ""
-devMode = True
+devMode = False
+
 
 class Graphics:
     def __init__(self, screenSize, prefix, spacing, border):
@@ -23,18 +24,20 @@ class Graphics:
 
         # Create gameVisual list and add a border, no matter if it's empty or not
         numberdBorder = [counter+1 for counter in range(self.YSCREENSIZE)]
-        numberdBorder = ["0" + str(numberdBorder[counter]) if numberdBorder[counter] < 10 else str(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
-        
+        numberdBorder = ["0" + str(numberdBorder[counter]) if numberdBorder[counter]
+                         < 10 else str(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
+
         borderLine = [self.BORDER for _ in range(
             self.XSCREENSIZE+len(self.PREFIX)+1)]
         if BORDERMODE == "Numbered":
-            gameVisuals = [CreateALine(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
+            gameVisuals = [CreateALine(numberdBorder[counter])
+                           for counter in range(self.YSCREENSIZE)]
         elif BORDERMODE == "Default":
             gameVisuals = [CreateALine("->") for _ in range(self.YSCREENSIZE)]
-        else: 
+        else:
             global errorMesage
             errorMesage = "Error. That border mode doesn't exist yet. :)"
-            
+
         gameVisuals.insert(0, borderLine)
         gameVisuals.append(borderLine)
         return gameVisuals
@@ -61,7 +64,7 @@ class AddVisuals:
         print("Input your desired shape, size, X and Y down below.")
         print("Use this format: Shape, Size, X, Y")
         SHAPE, SIZE, X, Y = input(">: ").split(",")
-        return SHAPE, SIZE, X, Y
+        return SHAPE, int(SIZE), int(X), int(Y)
 
     def CheckBorder(self, GAMEVISUALS, LINE, slotValue):
         hits = ["Hit" for _ in range(1) if LINE.index(slotValue) == 0 or LINE.index(
@@ -124,8 +127,15 @@ class GameHandler:
         if(len(errorMesage) > 0):
             GameHandler.ErrorHandler()
             return "Error!"
+        INTROMESSAGE = [" " for _ in range(
+            ((SCREENSIZE*3)-len("Welcome to my favorite project so far."))//2)]
+        INTROMESSAGE.append("Welcome to my favorite project so far.")
+        INTROMESSAGEBOTTOM = [" " for _ in range(
+            ((SCREENSIZE*3)-len("MySimpleScreen"))//2)]
+        INTROMESSAGEBOTTOM.append("MySimpleScreen")
         ADDVISUALS = AddVisuals(SCREENSIZE)
         GRAPHICS.PlayFrame(gameVisuals)
+
         while True:
             time.sleep(0.05)
             if keyboard.is_pressed("esc"):
@@ -133,17 +143,21 @@ class GameHandler:
                 return
             elif keyboard.is_pressed("space"):
                 GRAPHICS.LowerFrame(LOWER)
+                print(*INTROMESSAGE, sep="")
+                print(*INTROMESSAGEBOTTOM, sep="")
                 GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.02)
             elif keyboard.is_pressed("a"):
                 if devMode:
                     ADDVISUALS.AddDot(gameVisuals, 10, 5)
                     GRAPHICS.LowerFrame(LOWER)
+                    print(*INTROMESSAGE, sep="")
+                    print(*INTROMESSAGEBOTTOM, sep="")
                     GRAPHICS.PlayFrame(gameVisuals)
                     time.sleep(0.02)
                 else:
-                    shape, size, x, y = ADDVISUALS.ShapeInputHandler(SCREENSIZE)
-
+                    shape, size, x, y = ADDVISUALS.ShapeInputHandler(
+                        SCREENSIZE)
                     if size == 0:
                         print("Error. Size can't be 0.")
                     else:
@@ -151,9 +165,13 @@ class GameHandler:
                             case "Dot":
                                 ADDVISUALS.AddDot(gameVisuals, x, y)
                             case "Line":
-                                gameVisuals = ADDVISUALS.AddLine(gameVisuals, size, x, y)
+                                gameVisuals = ADDVISUALS.AddLine(
+                                    gameVisuals, size, x, y)
                         GRAPHICS.LowerFrame(LOWER)
+                        print(*INTROMESSAGE, sep="")
+                        print(*INTROMESSAGEBOTTOM, sep="")
                         GRAPHICS.PlayFrame(gameVisuals)
+
                         time.sleep(0.02)
             elif(len(errorMesage) > 0):
                 GameHandler.ErrorHandler()
