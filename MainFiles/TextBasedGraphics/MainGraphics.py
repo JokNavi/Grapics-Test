@@ -1,3 +1,4 @@
+import math
 import keyboard
 import time
 
@@ -19,7 +20,8 @@ class Graphics:
             return line
 
         # Create gameVisual list and add a border, no matter if it's empty or not
-        borderLine = [self.BORDER for _ in range(self.XSCREENSIZE+len(self.PREFIX)+1)]
+        borderLine = [self.BORDER for _ in range(
+            self.XSCREENSIZE+len(self.PREFIX)+1)]
         gameVisuals = [CreateALine() for _ in range(self.YSCREENSIZE)]
         gameVisuals.insert(0, borderLine)
         gameVisuals.append(borderLine)
@@ -33,15 +35,31 @@ class Graphics:
         lowerList = [" " for _ in range(lower)]
         print(*lowerList, sep="\n")
 
+
 class AddVisuals:
-    def AddLine(gameVisuals, SIZE, X, Y):
-        pass
+    def IsEven(self, SIZE):
+        if(SIZE%2 == 0): return 0
+        else: return 1
+
+    def AddDot(self, gameVisuals, X, Y):
+        LINE = gameVisuals[Y]
+        LINE[X] = "*"
+        gameVisuals[Y] = LINE
+        return gameVisuals
+
+    def AddLine(self, gameVisuals, SIZE, X, Y):
+        ISEVEN = AddVisuals.IsEven(self, SIZE)
+        HALFSIZE = math.floor(SIZE/2)
+        LINE = gameVisuals[Y]
+        LINE[(X-HALFSIZE):(X+HALFSIZE)+ISEVEN] = ["-" for _ in range(SIZE)]
+        gameVisuals[Y] = LINE
+        return gameVisuals
 
 class GameHandler:
 
     def GraphicsInputHandler(self):
         lower = 30
-        screenSize = 25
+        screenSize = 24
         prefix = "->"
         spacing = " "
         border = "#"
@@ -59,8 +77,12 @@ class GameHandler:
                 GRAPHICS.LowerFrame(LOWER)
                 GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.02)
-            if keyboard.is_pressed("shift+a"):
-                ADDVISUALS.AddLine(gameVisuals)
+            if keyboard.is_pressed("a"):
+                gameVisuals = ADDVISUALS.AddLine(gameVisuals, 7, 10, 3)
+                gameVisuals = ADDVISUALS.AddDot(gameVisuals, 10, 3)
+                GRAPHICS.LowerFrame(LOWER)
+                GRAPHICS.PlayFrame(gameVisuals)
+                time.sleep(0.02)
 
 class InitiateProgram:
 
