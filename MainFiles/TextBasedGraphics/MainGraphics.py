@@ -1,6 +1,6 @@
-import math
-import keyboard
 import time
+import copy
+import keyboard
 
 errorMesage = ""
 
@@ -72,18 +72,19 @@ class AddVisuals:
         return gameVisuals
 
     def AddLine(self, gameVisuals, SIZE, X, Y):
+        OLDGAMEVISUALS = copy.deepcopy(gameVisuals)
         slotValue = "-"
         ISEVEN = AddVisuals.IsEven(self, SIZE)
-        HALFSIZE = math.floor(SIZE/2)
+        HALFSIZE = SIZE//2
         LINE = gameVisuals[Y]
         LINE[(X-HALFSIZE):(X+HALFSIZE)+ISEVEN] = [slotValue for _ in range(SIZE)]
         if(AddVisuals.CheckBorder(self, gameVisuals, LINE, slotValue)):
             global errorMesage
             errorMesage = "Error. Cannot place shape there as it would overlap with the border."
-            gameVisuals = gameVisuals
+            return OLDGAMEVISUALS
         else:
             gameVisuals[Y] = LINE
-        return gameVisuals
+            return gameVisuals
 
 
 class GameHandler:
@@ -114,8 +115,8 @@ class GameHandler:
                 GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.02)
             elif keyboard.is_pressed("a"):
-                # ADDVISUALS.ShapeInputHandler(SCREENSIZE)
-                gameVisuals = ADDVISUALS.AddLine(gameVisuals, 3, 1, 3)
+                ADDVISUALS.ShapeInputHandler(SCREENSIZE)
+                gameVisuals = ADDVISUALS.AddLine(gameVisuals, 3, 5, 3)
                 GRAPHICS.LowerFrame(LOWER)
                 GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.02)
