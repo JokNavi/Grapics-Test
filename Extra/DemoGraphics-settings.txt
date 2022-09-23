@@ -14,6 +14,7 @@ Shapes:
 
 
 Shapes comment (circle size 2)
+
 1...###...
 2.#######.
 2...###...
@@ -54,4 +55,8 @@ pi = 3.14
 FORMULE:
 lengte = x
 75% van Straal/Pi horizontaal is gelijk aan 25% verticaal omhoog of omlaag = x
+
+FORMULE 2:
+( x - x1)2 + (y - y1)2 = r2
+
 

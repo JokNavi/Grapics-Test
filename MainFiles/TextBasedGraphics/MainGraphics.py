@@ -31,11 +31,8 @@ class Graphics:
 
         # Create gameVisual list and add a border, no matter if it's empty or not
         numberdBorder = [counter+1 for counter in range(self.YSCREENSIZE)]
-        numberdBorder = ["0" + str(numberdBorder[counter]) if numberdBorder[counter]
-                         < 10 else str(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
-
-        borderLine = [self.BORDER for _ in range(
-            self.XSCREENSIZE+len(self.PREFIX)+1)]
+        numberdBorder = ["0" + str(numberdBorder[counter]) if numberdBorder[counter]< 10 else str(numberdBorder[counter]) for counter in range(self.YSCREENSIZE)]
+        borderLine = [self.BORDER for _ in range(self.XSCREENSIZE+len(self.PREFIX)+1)]
         if BORDERMODE == "Numbered":
             gameVisuals = [CreateALine(numberdBorder[counter])
                            for counter in range(self.YSCREENSIZE)]
@@ -97,6 +94,7 @@ class AddVisuals:
         else:
             gameVisuals[Y] = LINE
             return gameVisuals
+        
 
     def AddLine(self, gameVisuals, SIZE, X, Y):
         OLDGAMEVISUALS = copy.deepcopy(gameVisuals)
