@@ -14,9 +14,9 @@ Shapes:
 
 
 Shapes comment (circle size 2)
-...###...
-.#######.
-...###...
+1...###...
+2.#######.
+2...###...
 
 Shapes comment (circle size 3)
 ....1234....
@@ -45,3 +45,13 @@ Shapes comment (Square size TEST)
 .123456789112.
 .123456789112.
 .123456789112.
+
+Shapes test 
+diameter = 10
+straal = 5
+pi = 3.14
+
+FORMULE:
+lengte = x
+75% van Straal/Pi horizontaal is gelijk aan 25% verticaal omhoog of omlaag = x
+
