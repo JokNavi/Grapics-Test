@@ -1,7 +1,7 @@
-#import time
+import time
 import math
 
-#start_time = time.time()
+start_time = time.perf_counter()
 
 #y in circle
 y = 2
@@ -13,4 +13,4 @@ r  = 5
 
 print(int((r**2 - y**2)**(1/2)))
 
-#print("My program took", time.time() - start_time, "to run")
+print("My program took", time.perf_counter() - start_time, "to run")
