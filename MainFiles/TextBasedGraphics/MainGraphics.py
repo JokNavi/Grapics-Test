@@ -1,4 +1,4 @@
-from mailbox import mboxMessage
+import math
 import time
 import copy
 import keyboard
@@ -59,7 +59,7 @@ class AddVisuals:
         self.YSCREENSIZE = SCREENSIZE
         self.XSCREENSIZE = SCREENSIZE*3
 
-    def ShapeInputHandler(SCREENSIZE):
+    def ShapeInputHandler(self, SCREENSIZE):
         print("\n#ADD-SHAPE-MENU!\n")
         print("- Shapes can be: Dot, Line")
         print(f"- Size can be: 1 to {SCREENSIZE}")
@@ -94,7 +94,13 @@ class AddVisuals:
         else:
             gameVisuals[Y] = LINE
             return gameVisuals
-        
+
+    def AddCircle(self, gameVisuals, SIZE, X, Y):
+        for i in range(SIZE):
+            Line = gameVisuals[Y] 
+            Amount = math.floor((SIZE/2)**2 - ((Y-Y)+i)**2)**(1/2)
+            Line[X-int(SIZE/2)] = ["-" for _ in range(Amount)]
+        return
 
     def AddLine(self, gameVisuals, SIZE, X, Y):
         OLDGAMEVISUALS = copy.deepcopy(gameVisuals)
@@ -119,6 +125,7 @@ class GameHandler:
         self.YSCREENSIZE = SCREENSIZE
         self.XSCREENSIZE = SCREENSIZE*3
 
+
     def InitiateFrame(self):
             MESSAGE = ['Welcome to my favorite project so far.','#MyPrintScreen']
             for i in range(2):
@@ -126,19 +133,26 @@ class GameHandler:
                 introMessage.append(MESSAGE[i])
                 print(*introMessage, sep="")
 
-    def AddShapeControlCenter(self, ADDVISUALS, gameVisuals):
-        SHAPE, SIZE, X, Y = ADDVISUALS.ShapeInputHandler(self.SCREENSIZE)
+    def AddShapeControlCenter(self,gameVisuals):
+        SCREENSIZE = self.SCREENSIZE
+        ADDVISUALS = AddVisuals(SCREENSIZE)
+        SHAPE, SIZE, X, Y = ADDVISUALS.ShapeInputHandler(SCREENSIZE)
         if SIZE < 1 or SIZE > self.YSCREENSIZE: 
             global errorMesage 
             errorMesage = "Error. size was Invalid."
         match SHAPE:
             case "Dot":
-                gameVisuals = ADDVISUALS.AddDot(self, gameVisuals, X, Y)
+                gameVisuals = ADDVISUALS.AddDot(gameVisuals, X, Y)
                 self.GRAPHICS.LowerFrame(self.LOWER)
                 self.InitiateFrame()
                 self.GRAPHICS.PlayFrame(gameVisuals)
             case "Line":
-                gameVisuals = ADDVISUALS.AddLine(self, gameVisuals, SIZE, X, Y)
+                gameVisuals = ADDVISUALS.AddLine(gameVisuals, SIZE, X, Y)
+                self.GRAPHICS.LowerFrame(self.LOWER)
+                self.InitiateFrame()
+                self.GRAPHICS.PlayFrame(gameVisuals)
+            case "Circle":
+                gameVisuals = ADDVISUALS.AddCircle(gameVisuals, SIZE, X, Y)
                 self.GRAPHICS.LowerFrame(self.LOWER)
                 self.InitiateFrame()
                 self.GRAPHICS.PlayFrame(gameVisuals)
@@ -161,7 +175,7 @@ class GameHandler:
                 self.GRAPHICS.PlayFrame(gameVisuals)
                 time.sleep(0.7)
             elif keyboard.is_pressed("a"):
-                self.AddShapeControlCenter(AddVisuals, gameVisuals)
+                self.AddShapeControlCenter(gameVisuals)
                 time.sleep(0.7)
 
 class InitiateProgram():
