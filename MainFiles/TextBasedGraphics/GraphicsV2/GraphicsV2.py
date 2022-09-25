@@ -7,12 +7,6 @@ class GameManager():
     def __init__(self) -> None:
         pass
 
-    SCREEN = Screen(10, "->", "#", 20)
-    gameVisuals = SCREEN.DefaultScreen()
-    SCREEN.RefreshBorder(gameVisuals)
-    SCREEN.PrintScreen(gameVisuals)
-    
-
     def ProgramParam(self, lower, prefix, border, screensize):
         print("\n#SETTINGS-MENU!")
         print(f"Vertical space inbetween frames: {lower}")
@@ -36,15 +30,21 @@ class GameManager():
                 print("\nSending data.\n")
                 return lower, prefix, border, screensize
 
-    def ShapeInputs(self, SCREENSIZE):
+    def ShapeInputs(self, SCREENSIZE, PREFIX):
         print("\n#ADD-SHAPE-MENU!\n")
-        print("- Shapes can be: Dot, Line")
+        print("- Shapes can be: Dot, Line, Circle")
         print(f"- Size can be: 1 to {SCREENSIZE}")
-        print(f"- X Coords can be: 1 to {SCREENSIZE*3}\n")
+        print(f"- X Coords can be: 1 to {(SCREENSIZE*3)-len(PREFIX)}\n")
         print("Input your desired shape, size, X and Y down below.")
         print("Use this format: Shape, Size, X, Y")
         SHAPE, SIZE, X, Y = input(">: ").split(",")
         return SHAPE, int(SIZE), int(X), int(Y)
+    
+    SCREEN = Screen(10, "->", "#", 20)
+    gameVisuals = SCREEN.DefaultScreen()
+    SCREEN.RefreshBorder(gameVisuals)
+    SCREEN.PrintScreen(gameVisuals)
+    
 
 
 #print(GameManager.ProgramParam("no", 10, "->", "#", 10))
