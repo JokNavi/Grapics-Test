@@ -5,8 +5,8 @@
 class Graphics():
     def __init__(self, SCREENSIZE):
         self.SCREENSIZE = SCREENSIZE
-        self.XSCREENSIZE = (SCREENSIZE*3)+1
-        self.YSCREENSIZE = SCREENSIZE+1
+        self.XSCREENSIZE = (SCREENSIZE*3)+2
+        self.YSCREENSIZE = SCREENSIZE+2
 
 # Screen(Graphics) (sub-class) is used for creating the default screen components such as the ScreenBorder() and DefaultScreen() functions.
 
@@ -44,8 +44,9 @@ class Screen(Graphics):
                 for count, char in enumerate([*self.PREFIX]):
                     value[count] = char
                 value[self.XSCREENSIZE-1] = self.BORDER
+
         gameVisuals[self.YSCREENSIZE-1] = gameVisuals[0] = [self.BORDER for _ in range(self.XSCREENSIZE)]
-        return
+        return gameVisuals
 
 
 SCREEN = Screen(10, "Numbered", "#", 25)
