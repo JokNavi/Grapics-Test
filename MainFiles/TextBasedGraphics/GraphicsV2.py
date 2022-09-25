@@ -9,12 +9,15 @@ class Graphics():
         self.YSCREENSIZE = SCREENSIZE+1
 
 # Screen(Graphics) (sub-class) is used for creating the default screen components such as the ScreenBorder() and DefaultScreen() functions.
+
+
 class Screen(Graphics):
     def __init__(self, LOWER, PREFIX, BORDER, SCREENSIZE):
         super().__init__(SCREENSIZE)
         self.LOWER = LOWER
         self.PREFIX = PREFIX
         self.BORDER = BORDER
+        
 
     def LowerFrame(self):
         lowerList = [" " for _ in range(self.LOWER)]
@@ -26,20 +29,26 @@ class Screen(Graphics):
 
     def DefaultScreen(self):
         emptyLine = [" " for _ in range(self.XSCREENSIZE)]
-        screenHeighteGen = ((self.YSCREENSIZE-1)-i for i in range(self.YSCREENSIZE))
-        gameVisuals = {n: emptyLine for n in screenHeighteGen}
+        screenHeightGen = ((self.YSCREENSIZE-1)-i for i in range(self.YSCREENSIZE))
+        gameVisuals = {n:list(emptyLine) for n in screenHeightGen}
         return gameVisuals
 
     def RefreshBorder(self, gameVisuals):
-        for key, value in gameVisuals.items():
-            for count, char in enumerate([*self.PREFIX]):
-                value[count] = char
-            value[self.XSCREENSIZE-1] = self.BORDER
+        if self.PREFIX == "Numbered":
+            for key, value in gameVisuals.items():
+                for i in range(len(str(key))):
+                    value[i] = str(key)[i]
+                value[self.XSCREENSIZE-1] = self.BORDER
+        else:
+            for key, value in gameVisuals.items():
+                for count, char in enumerate([*self.PREFIX]):
+                    value[count] = char
+                value[self.XSCREENSIZE-1] = self.BORDER
         gameVisuals[self.YSCREENSIZE-1] = gameVisuals[0] = [self.BORDER for _ in range(self.XSCREENSIZE)]
         return
 
 
-SCREEN = Screen(10, "->", "#", 25)
+SCREEN = Screen(10, "Numbered", "#", 25)
 gameVisuals = SCREEN.DefaultScreen()
 SCREEN.RefreshBorder(gameVisuals)
 SCREEN.PrintScreen(gameVisuals)
