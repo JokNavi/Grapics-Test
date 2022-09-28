@@ -1,4 +1,6 @@
+from turtle import screensize
 import keyboard
+import numpy as np
 from VisualsModule import *
 
 # GameManager() (class) is used for handeling the different startup modes and input parameters.
@@ -6,6 +8,11 @@ from VisualsModule import *
 class GameManager():
     def __init__(self) -> None:
         pass
+
+    lower = 15
+    prefix = "->" 
+    border = "##"
+    screensize = 25
 
     def ProgramParam(self, lower, prefix, border, screensize):
         print("\n#SETTINGS-MENU!")
@@ -39,13 +46,10 @@ class GameManager():
         print("Use this format: Shape, Size, X, Y")
         SHAPE, SIZE, X, Y = input(">: ").split(",")
         return SHAPE, int(SIZE), int(X), int(Y)
-    
-    SCREEN = Screen(10, "->", "#", 20)
-    gameVisuals = SCREEN.DefaultScreen()
-    SCREEN.RefreshBorder(gameVisuals)
-    SCREEN.PrintScreen(gameVisuals)
-    
 
+    gameVisuals = np.full([(screensize*3)+2, screensize+2]," ", dtype = "U")
+    Graphics = Graphics(lower, prefix, border, screensize)
+    Graphics.RefreshBorder(gameVisuals)
 
 #print(GameManager.ProgramParam("no", 10, "->", "#", 10))
 
